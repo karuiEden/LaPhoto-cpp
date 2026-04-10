@@ -1,9 +1,9 @@
 #include <opencv2/opencv.hpp>
 #include <vector>
 
-#include "algorithm.h"
-#include "channel_mixer.h"
-#include "convert.h"
+#include "include/algorithm.h"
+#include "include/channel_mixer.h"
+#include "include/convert.h"
 using namespace std;
 
 

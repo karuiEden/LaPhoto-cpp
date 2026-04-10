@@ -1,8 +1,9 @@
 cmake_minimum_required(VERSION 3.28)
 project(LaPhoto_cpp)
 
-set(CMAKE_CXX_STANDARD 26)
+set(CMAKE_CXX_STANDARD 23)
 find_package(OpenCV REQUIRED COMPONENTS core highgui imgcodecs imgproc)
+
 
 
 
@@ -28,12 +29,14 @@ message(STATUS "OpenCV libraries: ${OpenCV_LIBS}")
 # Название вашей исполняемой программы
 set(EXECUTABLE_NAME process_image)
 
-add_library(CONVERT convert.cpp convert.h)
+add_library(CONVERT src/convert.cpp)
+target_include_directories(CONVERT PRIVATE include)
 
-add_library(ALGO algorithm.cpp)
+add_library(ALGO src/algorithm.cpp)
+target_include_directories(ALGO PRIVATE include)
 
-add_library(CHANNEL_MIXER channel_mixer.cpp
-        channel_mixer.h)
+add_library(CHANNEL_MIXER src/channel_mixer.cpp)
+target_include_directories(CHANNEL_MIXER PRIVATE include)
 
 
 add_executable(${EXECUTABLE_NAME} main.cpp)

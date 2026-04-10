@@ -6,13 +6,13 @@
 #include <opencv2/opencv.hpp>
 #include <vector>
 #include <cstdint>
-using namespace std;
+
 //Make mixer of channels. If input is empty, function returns nullopt.
-optional<cv::Mat> channel_mixer(const cv::Mat& input, const ChannelMix& r_mixer, const ChannelMix& g_mixer, const ChannelMix& b_mixer, const ChannelMix& gray_mixer, bool monochrome) {
+std::optional<cv::Mat> channel_mixer(const cv::Mat& input, const ChannelMix& r_mixer, const ChannelMix& g_mixer, const ChannelMix& b_mixer, const ChannelMix& gray_mixer, bool monochrome) {
     if (input.empty()) {
-        return nullopt;
+        return std::nullopt;
     }
-    vector<cv::Mat> channels;
+    std::vector<cv::Mat> channels;
     cv::split(input, channels);
     cv::Mat R, G, B;
     channels[0].convertTo(B, CV_32F);
@@ -32,7 +32,7 @@ optional<cv::Mat> channel_mixer(const cv::Mat& input, const ChannelMix& r_mixer,
         outputBlue.convertTo(UB, CV_8U);
         outputGreen.convertTo(UG, CV_8U);
         outputRed.convertTo(UR, CV_8U);
-        vector outputBGR = {UB, UG, UR};
+        std::vector outputBGR = {UB, UG, UR};
         cv::merge(outputBGR, output);
         cv::cvtColor(output, output, cv::COLOR_BGR2BGRA);
     }
