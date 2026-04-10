@@ -6,7 +6,7 @@
 #include <opencv2/opencv.hpp>
 #include <vector>
 
-std::optional<std::vector<int32_t>> mat_to_argb_vector(const cv::Mat& src_mat) {
+std::optional<std::vector<int32_t> > mat_to_argb_vector(const cv::Mat &src_mat) {
     if (src_mat.empty()) {
         return std::nullopt;
     }
@@ -14,7 +14,7 @@ std::optional<std::vector<int32_t>> mat_to_argb_vector(const cv::Mat& src_mat) {
     for (int y = 0; y < src_mat.rows; ++y) {
         for (int x = 0; x < src_mat.cols; ++x) {
             // Пиксели в OpenCV Mat CV_8UC4 обычно B G R A
-            const auto& pixel = src_mat.at<cv::Vec4b>(y, x);
+            const auto &pixel = src_mat.at<cv::Vec4b>(y, x);
             uint8_t b = pixel[0];
             uint8_t g = pixel[1];
             uint8_t r = pixel[2];
@@ -31,7 +31,7 @@ std::optional<std::vector<int32_t>> mat_to_argb_vector(const cv::Mat& src_mat) {
 }
 
 // Вспомогательная функция для конвертации std::vector (ARGB) обратно в cv::Mat (BGRA)
-cv::Mat argb_vector_to_mat(const std::vector<int32_t>& argb_pixels, const int width, const int height) {
+cv::Mat argb_vector_to_mat(const std::vector<int32_t> &argb_pixels, const int width, const int height) {
     cv::Mat dst_mat(height, width, CV_8UC4); // CV_8UC4 для BGRA
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {

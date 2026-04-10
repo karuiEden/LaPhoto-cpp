@@ -10,6 +10,6 @@
 
 std::optional<std::vector<int32_t>> mat_to_argb_vector(const cv::Mat& src_mat);
 
-cv::Mat argb_vector_to_mat(const std::vector<int32_t>& argb_pixels, const int width, const int height);
+cv::Mat argb_vector_to_mat(const std::vector<int32_t>& argb_pixels, int width, int height);
 
 #endif //CONVERT_H

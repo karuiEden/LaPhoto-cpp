@@ -8,7 +8,8 @@
 #include <cstdint>
 
 //Make mixer of channels. If input is empty, function returns nullopt.
-std::optional<cv::Mat> channel_mixer(const cv::Mat& input, const ChannelMix& r_mixer, const ChannelMix& g_mixer, const ChannelMix& b_mixer, const ChannelMix& gray_mixer, bool monochrome) {
+std::optional<cv::Mat> channel_mixer(const cv::Mat &input, const ChannelMix &r_mixer, const ChannelMix &g_mixer,
+                                     const ChannelMix &b_mixer, const ChannelMix &gray_mixer, bool monochrome) {
     if (input.empty()) {
         return std::nullopt;
     }
