@@ -6,10 +6,17 @@
 #include <cmath>
 
 
-void process(const std::vector<int32_t> &srcPixels, std::vector<int32_t> &dstPixels, const int32_t width,
+void process(const std::vector<uint32_t> &srcPixels, std::vector<uint32_t> &dstPixels, const int32_t width,
              const int32_t height, const int32_t thr,
              const int32_t innothr, const std::vector<int32_t> &rules, const std::vector<int32_t> &srcChan,
              const bool msbFromSrc) {
+    uint32_t lutB[8], lutG[8], lutR[8];
+    for (uint32_t s = 0; s < 8; ++s) {
+        lutB[s] = rules[2] >> s & 1u ? 0x000001u : 0u;
+        lutG[s] = rules[1] >> s & 1u ? 0x000100u : 0u;
+        lutR[s] = rules[0] >> s & 1u ? 0x010000u : 0u;
+    }
+    std::vector<int32_t> tmpPixels(width * height);
     // set up the first line
     for (int j = 0; j < width; j++) {
         dstPixels[j] = ((srcPixels[j] >> (8 * srcChan[2]) & 0xFF) > thr ? 0x000001 : 0)
@@ -17,16 +24,17 @@ void process(const std::vector<int32_t> &srcPixels, std::vector<int32_t> &dstPix
                        + ((srcPixels[j] >> (8 * srcChan[0]) & 0xFF) > thr ? 0x010000 : 0);
     }
     for (int i = 1; i < height; i++) {
-        // apply cellular automaton rule
-        int32_t p = dstPixels[(i - 1) * width] * 3;
+        const auto* prev = &dstPixels[(i - 1) * width];
+        auto *cur = &dstPixels[i * width];
+
         for (int j = 0; j < width; j++) {
-            p = p << 1 & 0x070707;
-            if (j + 1 < width) {
-                p = p + dstPixels[(i - 1) * width + j + 1];
-            }
-            dstPixels[i * width + j] = ((1 << (p & 7) & rules[2]) > 0 ? 0x000001 : 0)
-                                       + ((1 << (p >> 8 & 7) & rules[1]) > 0 ? 0x000100 : 0)
-                                       + ((1 << (p >> 16 & 7) & rules[0]) > 0 ? 0x010000 : 0);
+            const auto left = j > 0 ? prev[j - 1] : 0;
+            const auto center = prev[j];
+            const auto right = j + 1 < width ? prev[j + 1] : 0;
+            const uint32_t b = (left & 1 ) << 2 | (center & 1) << 1 | right & 1;
+            const uint32_t g = (left >> 8 & 1) << 2 | (center >> 8 & 1) << 1 | right >> 8 & 1;
+            const uint32_t r = ((left >> 16) & 1) << 2 | ((center >> 16) & 1) << 1 | (right >> 16) & 1;
+            cur[j] = lutB[b] | lutG[g] | lutR[r];
         }
         // toggle CA bits if necessary
         for (int j = 0; j < width - 1; j++) {

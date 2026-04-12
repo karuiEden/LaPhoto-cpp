@@ -1,5 +1,5 @@
 ## LaPhoto
-Implementation of algorithm of distorted photo with channel mixer and cellular automata on C++ with OpenCV.
+Implementation of the algorithm of a distorted photo with channel mixer and cellular automata on C++ with OpenCV.
 
 Idea of algorithm with cellular automata: [MNSignalProcessing](https://github.com/MNSignalProcessing)
 

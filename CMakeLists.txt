@@ -3,6 +3,7 @@ project(LaPhoto_cpp)
 
 set(CMAKE_CXX_STANDARD 23)
 find_package(OpenCV REQUIRED COMPONENTS core highgui imgcodecs imgproc)
+add_compile_options(-Rpass=loop-vectorize -Rpass-missed=loop-vectorize -Rpass-analysis=loop-vectorize -march=native)
 
 
 
@@ -37,7 +38,6 @@ target_include_directories(ALGO PRIVATE include)
 
 add_library(CHANNEL_MIXER src/channel_mixer.cpp)
 target_include_directories(CHANNEL_MIXER PRIVATE include)
-
 
 add_executable(${EXECUTABLE_NAME} main.cpp)
 

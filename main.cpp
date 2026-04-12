@@ -43,7 +43,7 @@ int main(const int32_t argc, char** argv) {
     }
 
     const auto& src_pixels_argb = src_pixels_argb_opt.value();
-    std::vector<int32_t> dst_pixels_argb(width * height);
+
 
     // Пример параметров (замените на ваши реальные)
     const int32_t thr = 78;
@@ -52,8 +52,25 @@ int main(const int32_t argc, char** argv) {
     const std::vector srcChan = {2, 1, 0}; // R, G, B
     const bool msbFromSrc = true;
 
+    std::vector<int32_t> dst_pixels_argb(width * height);
     // Вызов вашей функции process
-    process(src_pixels_argb, dst_pixels_argb, width, height, thr, innothr, rules, srcChan, msbFromSrc);
+    for (int i = 0; i < 10; i++) {
+        auto res = dst_pixels_argb;
+        process(src_pixels_argb, res, width, height, thr, innothr, rules, srcChan, msbFromSrc);
+    }
+
+    std::chrono::microseconds time{};
+    for (int i = 0; i < 20; ++i) {
+        std::vector<int32_t> res(dst_pixels_argb.size());
+        auto start = std::chrono::high_resolution_clock::now();
+        process(src_pixels_argb, res, width, height, thr, innothr, rules, srcChan, msbFromSrc);
+        auto end = std::chrono::high_resolution_clock::now();
+        time += std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        if (i == 19) {
+            dst_pixels_argb = res;
+        }
+    }
+    std::cout << "Time: " << time / 20  << std::endl;
 
     // Конвертация обратно в cv::Mat для сохранения
     cv::Mat output_image = argb_vector_to_mat(dst_pixels_argb, width, height);
